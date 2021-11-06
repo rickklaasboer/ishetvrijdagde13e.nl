@@ -22,22 +22,22 @@ function now($tz = 'Europe/Amsterdam')
  *
  * @return Carbon|false|null
  */
-function getNextFridayThe13th()
+function getNextFridayThe13th($year)
 {
     for ($i = 1; $i < 12; $i++) {
-        $date = Carbon::create(now()->year, $i, 13);
+        $date = Carbon::create($year, $i, 13);
 
-        if ($date->dayOfWeek === 5) {
+        if ($date->dayOfWeek === 5 && !$date->isPast()) {
             return $date;
         }
     }
 
-    return null;
+    return getNextFridayThe13th($year + 1);
 }
 
 $isIt = false;
 $now = now();
-$nextFridayThe13th = getNextFridayThe13th();
+$nextFridayThe13th = getNextFridayThe13th(now()->year);
 
 if ($now->isFriday() && $now->day === 13) {
     $isIt = true;
