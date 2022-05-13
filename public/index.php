@@ -102,7 +102,12 @@ function timer() {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    document.getElementById("timer").innerHTML = "<b>" + days + " dagen " + hours + " uur " + minutes + " minuten " + seconds + " seconden </b><br> tot de volgende vrijdag de 13e";
+    document.getElementById("timer").innerHTML = "<b>" + 
+    (days > 0 ? days + (days == 1 ? " dag " : " dagen ") : "") +
+    (hours > 0 || (hours == 0 && days > 0) ? hours + (hours == 1 ? " uur " : " uren ") : "") +
+    (minutes > 0 || (minutes == 0 && (hours > 0 || days > 0)) ? minutes + (minutes == 1 ? " minuut " : " minuten ") : "") +
+    (seconds > 0 || (seconds == 0 && (minutes > 0 || hours > 0 || days > 0)) ? seconds + (seconds == 1 ? " seconde " : " seconden ") : "") +
+    (days + hours + minutes + (seconds-1) < 0 ? "<br>Het is nu vrijdag de 13e</br>" : "</b><br> tot de volgende vrijdag de 13e");
 }
 
 timer()
