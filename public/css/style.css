@@ -1,62 +1,187 @@
+/* House style of rickklaasboer.nl */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2");
+}
+
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-  --primary-background-color: #22272e;
-  --primary-text-color: #adbac7;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-background-color: #22272e;
-    --primary-text-color: #adbac7;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --primary-background-color: #ffffff;
-    --primary-text-color: #000000;
-  }
+  --color-navy: #121316;
+  --color-ink: #3a3c41;
+  --color-muted: #5f636b;
+  --color-sky: #b9d9f0;
+  --color-accent: #2453d6;
+  --color-pink: #8ee3ff;
+  --gradient-hero: linear-gradient(90deg, #8ee3ff 0%, #3b82f6 38%, #2453d6 68%, #1d1f24 100%);
+  --fade-strong: linear-gradient(180deg, #121316 48%, #12131699 78%, #12131626 100%);
+  --duration-base: 0.2s;
 }
 
 body {
-  font-family: sans-serif;
-  background-color: var(--primary-background-color);
-  color: var(--primary-text-color);
-}
-
-.flex-container {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  line-height: 1.6;
+  background-color: #fff;
+  color: var(--color-ink);
+  min-height: 100vh;
   display: flex;
-  flex-flow: column;
-  justify-content: center;
+  flex-direction: column;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-pink);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1248px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.top {
+  background: var(--fade-strong), var(--gradient-hero);
+  color: #fff;
+  padding: 28px 0 80px;
+}
+
+.hero {
+  padding-top: 160px;
+}
+
+h1 {
+  max-width: 940px;
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.answer {
+  margin-top: 24px;
+  /* Compensate the glyph side bearing so the answer lines up with the h1 */
+  margin-left: -0.05em;
+  font-size: 240px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.next {
+  padding-top: 96px;
+  padding-bottom: 120px;
+  flex: 1;
+}
+
+.next-date {
+  font-size: 20px;
+  color: var(--color-ink);
+}
+
+.next-date b {
+  color: var(--color-navy);
+  white-space: nowrap;
+}
+
+.next-timer {
+  margin-top: 32px;
+  font-size: 18px;
+  color: var(--color-muted);
+}
+
+.next-timer b {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: var(--color-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer {
+  background-color: var(--color-navy);
+  color: var(--color-sky);
+  padding: 28px 0;
+  font-size: 15px;
+}
+
+.footer .wrap {
+  display: flex;
   align-items: center;
-  height: 100vh;
+  justify-content: space-between;
+  gap: 24px;
 }
 
-.flex-item {
-  margin-bottom: 12px;
+.footer p a {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color var(--duration-base) ease-out, text-decoration-color var(--duration-base) ease-out,
+    text-decoration-thickness var(--duration-base) ease-out, text-underline-offset var(--duration-base) ease-out;
 }
 
-.bootstrap-icon {
-  position: absolute;
-  left: 24px;
-  bottom: 24px;
-  color: var(--primary-text-color);
+/* Same as rickklaasboer.nl, but pink instead of the accent: accent blue on navy lacks contrast */
+.footer p a:hover {
+  color: var(--color-pink);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 5px;
 }
 
-.bootstrap-icon:hover {
-  opacity: 0.75;
+.github {
+  display: inline-flex;
+  color: #fff;
+  transition: color var(--duration-base) ease-out;
 }
 
-.text-center {
-  text-align: center;
+.github:hover {
+  color: var(--color-pink);
 }
 
-.is-it {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+@media (max-width: 860px) {
+  .top {
+    padding: 12px 0 48px;
+  }
+
+  .hero {
+    padding-top: 96px;
+  }
+
+  h1 {
+    font-size: 44px;
+  }
+
+  .answer {
+    font-size: 144px;
+  }
+
+  .next {
+    padding-top: 56px;
+    padding-bottom: 72px;
+  }
+
+  .next-date {
+    font-size: 18px;
+  }
+
+  .next-timer b {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer p a,
+  .github {
+    transition: none;
+  }
 }
