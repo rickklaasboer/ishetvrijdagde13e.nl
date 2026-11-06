@@ -70,7 +70,7 @@ if ($now->isFriday() && $now->day === 13) {
           content="<?= $isIt ? "Het is vandaag vrijdag de 13e." : "Het is vandaag geen vrijdag de 13e." ?>"
     />
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=<?= filemtime(__DIR__ . '/css/style.css') ?>">
     <title>Is het vrijdag de 13e?</title>
 </head>
 <body>
