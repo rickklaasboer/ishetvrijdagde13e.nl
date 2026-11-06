@@ -18,26 +18,29 @@ function now($tz = 'Europe/Amsterdam')
 }
 
 /**
- * Get next friday the 13th or null
+ * Get the start of the first friday the 13th after $now
  *
- * @return Carbon|false|null
+ * @param Carbon $now
+ * @return Carbon
  */
-function getNextFridayThe13th($year)
+function getNextFridayThe13th(Carbon $now)
 {
-    for ($i = 1; $i < 12; $i++) {
-        $date = Carbon::create($year, $i, 13);
+    $date = $now->copy()->setDay(13)->startOfDay();
 
-        if ($date->dayOfWeek === 5 && !$date->isPast()) {
-            return $date;
-        }
+    if ($date->lessThanOrEqualTo($now)) {
+        $date->addMonth();
     }
 
-    return getNextFridayThe13th($year + 1);
+    while (!$date->isFriday()) {
+        $date->addMonth();
+    }
+
+    return $date;
 }
 
 $isIt = false;
 $now = now();
-$nextFridayThe13th = getNextFridayThe13th(now()->year);
+$nextFridayThe13th = getNextFridayThe13th($now);
 
 if ($now->isFriday() && $now->day === 13) {
     $isIt = true;
@@ -79,11 +82,9 @@ if ($now->isFriday() && $now->day === 13) {
     <div class="flex-item text-center">
         <p class="is-it"><?= $isIt ? "Ja" : "Nee" ?></p>
 
-        <?php if ($nextFridayThe13th): ?>
-            <p class="next-friday">De volgende vrijdag de 13e is op <?= $nextFridayThe13th->format('d-m-Y') ?></p>
-            <br>
-            <p class="next-friday-timer" id="timer"></p>
-        <?php endif; ?>
+        <p class="next-friday">De volgende vrijdag de 13e is op <?= $nextFridayThe13th->format('d-m-Y') ?></p>
+        <br>
+        <p class="next-friday-timer" id="timer"></p>
     </div>
 </div>
 
