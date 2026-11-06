@@ -55,17 +55,27 @@ if ($now->isFriday() && $now->day === 13) {
 -->
 
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <meta name="description"
+          content="Is het vandaag vrijdag de 13e? Hier zie je het meteen, met een aftelklok tot de volgende vrijdag de 13e."/>
+    <link rel="canonical" href="https://ishetvrijdagde13e.nl/">
+
     <meta property="og:title" content="Is het vrijdag de 13e?"/>
     <meta property="og:site_name" content="Is het vrijdag de 13e?"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="http://ishetvrijdagde13e.nl/"/>
+    <meta property="og:locale" content="nl_NL"/>
+    <meta property="og:url" content="https://ishetvrijdagde13e.nl/"/>
+    <meta property="og:image" content="https://ishetvrijdagde13e.nl/og-image.jpg"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="og:image:alt" content="Is het vrijdag de 13e?"/>
+    <meta name="twitter:card" content="summary_large_image"/>
     <meta property="og:description"
           content="<?= $isIt ? "Het is vandaag vrijdag de 13e." : "Het is vandaag geen vrijdag de 13e." ?>"
     />
