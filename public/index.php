@@ -18,26 +18,29 @@ function now($tz = 'Europe/Amsterdam')
 }
 
 /**
- * Get next friday the 13th or null
+ * Get the start of the first friday the 13th after $now
  *
- * @return Carbon|false|null
+ * @param Carbon $now
+ * @return Carbon
  */
-function getNextFridayThe13th($year)
+function getNextFridayThe13th(Carbon $now)
 {
-    for ($i = 1; $i < 12; $i++) {
-        $date = Carbon::create($year, $i, 13);
+    $date = $now->copy()->setDay(13)->startOfDay();
 
-        if ($date->dayOfWeek === 5 && !$date->isPast()) {
-            return $date;
-        }
+    if ($date->lessThanOrEqualTo($now)) {
+        $date->addMonth();
     }
 
-    return getNextFridayThe13th($year + 1);
+    while (!$date->isFriday()) {
+        $date->addMonth();
+    }
+
+    return $date;
 }
 
 $isIt = false;
 $now = now();
-$nextFridayThe13th = getNextFridayThe13th(now()->year);
+$nextFridayThe13th = getNextFridayThe13th($now);
 
 if ($now->isFriday() && $now->day === 13) {
     $isIt = true;
@@ -79,11 +82,9 @@ if ($now->isFriday() && $now->day === 13) {
     <div class="flex-item text-center">
         <p class="is-it"><?= $isIt ? "Ja" : "Nee" ?></p>
 
-        <?php if ($nextFridayThe13th): ?>
-            <p class="next-friday">De volgende vrijdag de 13e is op <?= $nextFridayThe13th->format('d-m-Y') ?></p>
-            <br>
-            <p class="next-friday-timer" id="timer"></p>
-        <?php endif; ?>
+        <p class="next-friday">De volgende vrijdag de 13e is op <?= $nextFridayThe13th->format('d-m-Y') ?></p>
+        <br>
+        <p class="next-friday-timer" id="timer"></p>
     </div>
 </div>
 
@@ -94,24 +95,46 @@ if ($now->isFriday() && $now->day === 13) {
     </svg>
 </a>
 <script>
-function timer() {
-    const distance = <?php echo $nextFridayThe13th->timestamp * 1000 ?> - new Date().getTime();
+const target = <?= $nextFridayThe13th->getTimestampMs() ?>;
+const timerElement = document.getElementById('timer');
+const units = [
+    [24 * 60 * 60, 'dag', 'dagen'],
+    [60 * 60, 'uur', 'uren'],
+    [60, 'minuut', 'minuten'],
+    [1, 'seconde', 'seconden'],
+];
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+// Leading zero units are skipped, so "5 minuten 3 seconden" instead of "0 dagen 0 uren ...".
+function formatRemaining(totalSeconds) {
+    const parts = [];
+    let rest = totalSeconds;
 
-    document.getElementById("timer").innerHTML = "<b>" + 
-    (days > 0 ? days + (days == 1 ? " dag " : " dagen ") : "") +
-    (hours > 0 || (hours == 0 && days > 0) ? hours + (hours == 1 ? " uur " : " uren ") : "") +
-    (minutes > 0 || (minutes == 0 && (hours > 0 || days > 0)) ? minutes + (minutes == 1 ? " minuut " : " minuten ") : "") +
-    (seconds > 0 || (seconds == 0 && (minutes > 0 || hours > 0 || days > 0)) ? seconds + (seconds == 1 ? " seconde " : " seconden ") : "") +
-    (days + hours + minutes + (seconds-1) < 0 ? "<br>Het is nu vrijdag de 13e</br>" : "</b><br> tot de volgende vrijdag de 13e");
+    for (const [size, singular, plural] of units) {
+        const value = Math.floor(rest / size);
+        rest %= size;
+
+        if (value > 0 || parts.length > 0) {
+            parts.push(`${value} ${value === 1 ? singular : plural}`);
+        }
+    }
+
+    return parts.join(' ');
 }
 
-timer()
-setInterval(timer, 1000);
+function updateTimer() {
+    const remaining = Math.floor((target - Date.now()) / 1000);
+
+    if (remaining <= 0) {
+        timerElement.innerHTML = '<b>Het is nu vrijdag de 13e</b>';
+        clearInterval(interval);
+        return;
+    }
+
+    timerElement.innerHTML = `<b>${formatRemaining(remaining)}</b><br>tot de volgende vrijdag de 13e`;
+}
+
+const interval = setInterval(updateTimer, 1000);
+updateTimer();
 </script>
 </body>
 </html>
